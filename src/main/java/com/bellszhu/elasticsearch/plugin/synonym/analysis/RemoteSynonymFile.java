@@ -122,6 +122,7 @@ public class RemoteSynonymFile implements SynonymFile {
     /**
      * Download custom terms from a remote server
      */
+    @Override
     public Reader getReader() {
         Reader reader;
         RequestConfig rc = RequestConfig.custom()
@@ -154,7 +155,9 @@ public class RemoteSynonymFile implements SynonymFile {
                             .append(System.getProperty("line.separator"));
                 }
                 reader = new StringReader(sb.toString());
-            } else reader = new StringReader("");
+            } else {
+                reader = new StringReader("");
+            }
         } catch (Exception e) {
             logger.error("get remote synonym reader {} error!", location, e);
 //            throw new IllegalArgumentException(

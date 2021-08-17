@@ -103,6 +103,7 @@ public class DynamicSynonymTokenFilterFactory extends
                 "Call getChainAwareTokenFilterFactory to specialize this factory for an analysis chain first");
     }
 
+    @Override
     public TokenFilterFactory getChainAwareTokenFilterFactory(
             TokenizerFactory tokenizer,
             List<CharFilterFactory> charFilters,
@@ -170,7 +171,10 @@ public class DynamicSynonymTokenFilterFactory extends
     SynonymFile getSynonymFile(Analyzer analyzer) {
         try {
             SynonymFile synonymFile;
-            if (location.startsWith("http://") || location.startsWith("https://")) {
+            if (location.equals("fromDB")) {
+                synonymFile = new RemoteSynonymDB(environment, analyzer, expand, lenient, format,
+                        location);
+            } else if (location.startsWith("http://") || location.startsWith("https://")) {
                 synonymFile = new RemoteSynonymFile(
                         environment, analyzer, expand, lenient,  format, location);
             } else {
